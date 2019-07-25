@@ -1,7 +1,6 @@
 @import "normalize";
 @import "rouge-github";
 @import "variables";
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
 
 @mixin large {
   @media screen and (min-width: #{$large-breakpoint}) {
@@ -32,24 +31,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: $body-text-color;
-}
-
-#skip-to-content {
-  height: 1px;
-  width: 1px;
-  position: absolute;
-  overflow: hidden;
-  top: -10px;
-
-  &:focus {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    height: auto;
-    width: auto;
-    background: invert($body-link-color);
-    outline: thick solid invert($body-link-color);
-  }
 }
 
 a {
@@ -116,12 +97,96 @@ a {
   }
 
   @include medium {
-    padding: 3rem 4rem;
+    padding: 4rem 4rem 3rem;
   }
 
   @include small {
-    padding: 2rem 1rem;
+    padding: 4rem 1rem 2rem;
   }
+}
+
+.nav {
+  color: $header-heading-color;
+  text-align: center;
+  background-color: $header-bg-color;
+  background-image: linear-gradient(120deg, $header-bg-color-secondary, $header-bg-color);
+
+  @include large {
+    padding: 0rem 6rem;
+  }
+
+  @include medium {
+    padding: 0rem 4rem;
+  }
+
+  @include small {
+    padding: 0rem 1rem;
+  }
+}
+
+.logo {
+  background-image: url(../logo.png); 
+}
+
+.navbar-nav {
+  flex-direction: row;
+  display: flex;
+  list-style: none;
+  float: right;
+}
+
+.navbar-nav li a {
+  padding: 0 20px;
+  color: $header-heading-color;
+  font-size: 1.3rem;
+}
+
+.post-list {
+  list-style: none;
+  padding: 0;
+}
+
+.post-list li {
+  padding: 30px 0;
+  border-bottom: solid 1px $hr-border-color;
+}
+
+.post-meta {
+  font-size: 1rem;
+}
+
+a.post-link {
+  color: $section-headings-color;
+  font-size: 2.25rem;
+  text-decoration: none;
+
+  &:hover {
+    color: $hover-title-color;
+  }
+}
+
+ul.fa-ul {
+  overflow: auto;
+  width: 250px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+ul.fa-ul li {
+	list-style-type: none;
+	float: left;
+}
+
+ul.fa-ul li a i {
+	background: $section-headings-color;
+	color: #fff;
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
+	font-size: 25px;
+	text-align: center;
+	margin-right: 10px;
+	padding-top: 15%;
 }
 
 .project-name {
@@ -166,6 +231,23 @@ a {
     margin-top: 0;
   }
 
+  .post-title {
+    margin-bottom: 0;
+  }
+
+  .homepage {
+    margin-top: 0rem;
+  }
+
+  .homepage-img {
+    max-height: 240px;
+    display: block;
+  }
+
+  #disqus_thread {
+    padding-top: 40px;
+  }
+
   @include large {
     max-width: 64rem;
     padding: 2rem 6rem;
@@ -182,23 +264,20 @@ a {
     padding: 2rem 1rem;
     font-size: 1rem;
   }
-  
-  kbd {
-    background-color: #fafbfc;
-    border: 1px solid #c6cbd1;
-    border-bottom-color: #959da5;
-    border-radius: 3px;
-    box-shadow: inset 0 -1px 0 #959da5;
-    color: #444d56;
-    display: inline-block;
-    font-size: 11px;
-    line-height: 10px;
-    padding: 3px 5px;
-    vertical-align: middle;
-  }
 
   img {
     max-width: 100%;
+  
+    @include large {
+      margin-right: 3rem;
+    }
+  
+    @include medium {
+      margin-right: 3rem;
+    }
+  
+    @include small {
+    }
   }
 
   h1,
@@ -211,6 +290,10 @@ a {
     margin-bottom: 1rem;
     font-weight: normal;
     color: $section-headings-color;
+  }
+
+  h2.homepage {
+    margin-bottom: 0rem;
   }
 
   p {
@@ -352,8 +435,8 @@ a {
 
 .site-footer {
   padding-top: 2rem;
-  margin-top: 2rem;
-  border-top: solid 1px $hr-border-color;
+  margin-top: 6rem;
+  text-align: center;
 
   @include large {
     font-size: 1rem;

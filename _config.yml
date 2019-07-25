@@ -1,5 +1,18 @@
-title: Cayman theme
-description: Cayman is a clean, responsive theme for GitHub Pages.
-show_downloads: true
+title: First You Guess, Then You Experiment
+description: "\"It doesn't make any difference how beautiful your guess is, it doesn't matter how smart you are, or who made the guess, or what his name is... If it disagress with experiment, it's wrong.\" -- Richard Feynman"
+show_downloads: false
 google_analytics:
 theme: jekyll-theme-cayman
+
+author: Alvin Abad
+
+linkedin_username: alvinabad
+permalink: /:year-:month-:day-:title
+
+disqus:
+    shortname: alvinabad
+
+plugins:
+#  - jekyll-feed
+#  - jekyll-sitemap
+#  - jekyll-redirect-from
