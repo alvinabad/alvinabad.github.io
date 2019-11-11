@@ -69,11 +69,15 @@ qQXHVQLCUrt8X856YwdpKb6INk1KNDYHDNNRKgmY/jLIrJ6DxJrdNSg=
 
 The command above will create a private key and send it to STDOUT.
 
-One way or another, you will need to save your RSA private key to a file.
-Clearly, it is not desirable to store it in the clear. It would be like saving
-a password to a file in clear text.
+At some point, you will need to save your private key to a file so that it can be used later.
+I don't think anyone can memorize an RSA key. As you can see above, 
+it is composed of a lot random characters that don't make any sense.
 
-The solution to this problem is to store the private key in encrypted form.
+So if you need to save it to a file, clearly, it is not desirable to store it in the clear. 
+It would be like saving a password to a file in clear text.
+
+The solution to this problem is to store the private key in encrypted form. 
+The key (passphrase) to encrypt the RSA key will then be smaller, hence, easier to memorize by a human.
 
 ### Create an encrypted RSA private key
 
@@ -87,8 +91,10 @@ The password or passphrase to encrypt the key will be prompted.
 Encryption will be done using the AES-256 algorithm. Other types of algorithm are available.
 Run *openssl genrsa --help* to view other types.
 
-While prompting for the passphrase is a secure way of supplying the passphrase, there are times
-when this is not an option. For example, you need to do this programmatically.
+By using a passphrase, it will be smaller in size and easier to memorize by a human.
+
+However, although prompting for the passphrase is a secure way of supplying the passphrase, there are times
+when this is not possible. For example, you need to do this programmatically or there is no human to supply the passphrase.
 
 ### Create an encrypted private key without prompting for passphrase
 
@@ -97,18 +103,19 @@ $ echo -n "secret" | openssl genrsa -aes256 -passout stdin 2048
 ```
 
 Instead of prompting for the passphrase, the passphrase can be supplied in the command line through STDIN of openssl.
-The passphrase used to encrypt the created key is the word *secret*.
+The passphrase used to encrypt the created key above is the word *secret*.
 
-This may not be a good idea to use in practice because the passphrase is displayed in clear text.
-This is just an illustration because the STDIN can still be used in a secured way and doesn't need to display in clear text.
+This command may not be a good idea to use in practice because the passphrase is displayed in clear text.
+But this is just a demonstration because even with STDIN, you can still supply the passphrase in a secured way
+and will not display to the screen or appear in the command in clear text.
 
-For example, you can get the passphrase from a file and then pass its contents to the STDIN of the openssl command.
+For example, you can get the passphrase from a file and then pass the contents to the STDIN of the openssl command.
 
 ```
 $ cat ~/.ssh/passphrase.txt | openssl genrsa -aes256 -passout stdin 2048
 ```
 
-Instead of a file, you can use a command or application that will derive the passphrase or retrieve it from a secured source.
+Instead of a file, you can use a command or application to derive the passphrase or retrieve it from a secured source.
 
 ```
 $ getpassphrase | openssl genrsa -aes256 -passout stdin 2048
@@ -128,7 +135,7 @@ $ openssl rsa -in privatekey_e.pem
 ```
 
 This command decrypts an encrypted key stored in *privatekey_e.pem* file. 
-This command will prompt for the passphrase to decrypt the key.
+It will prompt for the passphrase to decrypt the key.
 If the passphrase is correct, the decrypted key will be displayed (sent to STDOUT).
 
 ### Decrypt an encrypted RSA private key without prompting for the passphrase
@@ -148,7 +155,8 @@ $ cat ~/.ssh/passphrase.txt | openssl rsa -passin stdin -in privatekey_e.pem
 $ getpassphrase | openssl rsa -passin stdin -in privatekey_e.pem
 ```
 
-What if you created a private key but forgot to encrypt it?
+What if when you first created a private key you don't need it encrypted, 
+but later on decided you want it encrypted?
 
 ### Encrypt an RSA private key
 
