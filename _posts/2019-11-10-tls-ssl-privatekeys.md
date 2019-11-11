@@ -27,7 +27,7 @@ The size of the created key is 2048 bits.
 Sometimes you don't want to save the private key to a file and instead, you want to display it or send it to the screen.
 For example, you need to cut-and-paste the key to a website or GUI application. 
 You want to save the step of doing a cat command of the file and
-avoid the step of removing it because for security reasons, you don't want it saved to your disk.
+avoid the step of removing it because for security reasons, you don't want it saved on your hard drive.
 
 ### Create an RSA private key and and display it on the screen
 
