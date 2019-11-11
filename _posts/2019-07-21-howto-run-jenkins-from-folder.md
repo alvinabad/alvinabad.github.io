@@ -3,7 +3,7 @@ layout: post
 title: "How to run Jenkins from a folder"
 description: "If your server needs to host other things besides jenkins..."
 #date: 2019-07-04 00:39:00 +0800
-#tags: coding
+tags: jenkins
 ---
 
 If you need to run a reverse proxy for your Jenkins server and use a folder, here's a good documentation:
