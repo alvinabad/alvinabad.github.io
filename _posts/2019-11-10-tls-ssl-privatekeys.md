@@ -6,7 +6,7 @@ title: "TLS/SSL Certificates - The Private Key"
 tags: security
 ---
 
-I know that there is already a ton of information out there about this topic. 
+There is already a ton of information out there about this topic. 
 But I noticed that there is no one site that provides exactly what I usually need. 
 Some provide only a specific use-case and miss out on others. 
 I often have to do multiple searches. Although searching Google is fast and hits are often accurate, 
@@ -22,12 +22,12 @@ TLS/SSL Certificates require a private key. It's the very first thing that is re
 $ openssl genrsa -out privatekey.pem 2048
 ```
 This will create a private key and save it to a file named *privatekey.pem*. 
-The size of the created key will be 2048 bits.
+The size of the created key is 2048 bits.
 
-Sometimes you don't want to save the private key to a file and instead, you want to send it to the screen.
+Sometimes you don't want to save the private key to a file and instead, you want to display it or send it to the screen.
 For example, you need to cut-and-paste the key to a website or GUI application. 
 You want to save the step of doing a cat command of the file and
-also want to avoid the step of removing it because for security reasons, you don't want it to be saved to your disk.
+avoid the step of removing it because for security reasons, you don't want it saved to your disk.
 
 ### Create an RSA private key and and display it on the screen
 
@@ -69,9 +69,11 @@ qQXHVQLCUrt8X856YwdpKb6INk1KNDYHDNNRKgmY/jLIrJ6DxJrdNSg=
 
 The command above will create a private key and send it to STDOUT.
 
-What if you want to create a private key that is encrypted? 
-Creating a private key and saving it to a file on your disk is like saving a password to a file in clear text. 
-Sometimes this is not a good idea.
+One way or another, you will need to save your RSA private key to a file.
+Clearly, it is not desirable to store it in the clear. It would be like saving
+a password to a file in clear text.
+
+The solution to this problem is to store the private key in encrypted form.
 
 ### Create an encrypted RSA private key
 
