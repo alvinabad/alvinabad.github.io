@@ -123,7 +123,7 @@ That's true. We will take care of that when we show how to pass a struct to a C 
 
 ### How to pass a struct data to a C function
 
-To pass a struct to a C function, you'll need to set the *argtypes* to the name of the class Structure, 
+To pass a struct to a C function, you'll need to set the *argtypes* of the name of the class Structure,
 which is in our case *Data*.
 It will be enclosed in square brackets since function arguments are like lists in Python.
 
@@ -132,7 +132,7 @@ lib.free_data.argtypes = [Data]
 ```
 
 In the *pass_struct.c* program above, there is a function called *free_data()* that accepts a struct.
-we will call this *free_data()* function to pass a struct.
+We will call this function from Python to pass a struct.
 
 When we called the *get_data()* function, it allocated a memory to the d.message string.
 When we're done using it, we need to free its memory usage or else it will be memory leak.
