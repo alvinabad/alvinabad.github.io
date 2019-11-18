@@ -15,7 +15,7 @@ tags: mac
 ```
 If the folder exists and has files in it, skip steps 5 to 7 below and proceed to step 8.
 <br/>
-If this folder does not exist, proceed with step 5.
+If this folder does not exist, proceed to step 5.
 5. Create the SharedSupport folder
 ```
 mkdir /Applications/Install\ macOS\ Catalina.app/Contents/SharedSupport
