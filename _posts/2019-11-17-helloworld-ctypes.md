@@ -13,7 +13,7 @@ My first impression when I started looking into the documentation of ctypes was,
 
 Well, that was only when I was reading sample programs where they only deal with simple data types like strings and integers.
 But when I began using it at my work were I needed to call C libraries from Python, I immediately got stumped when I saw
-the data being passed and returned from the C functions were structs, arrays, pointers, pointerts to pointers, ... 
+the data being passed and returned from the C functions were structs, arrays, pointers, pointers to pointers, ... 
 Ah, suddenly it got complicated.
 
 ## How to retrieve a struct data from a C function
@@ -24,7 +24,7 @@ Below is an example on how to retrieve a struct data from C.
 I made the example as simple as possible so that it can be better understood. 
 No extra and fancy features are involved. 
 I thought those things only get in the way of understanding quickly and not helping at all.
-In the first example, I deliberately omitted the process on how to pass a struct so that it won't add more confusion. We'll have that in a separate example.
+In the first example, I deliberately omitted the process of how to pass a struct so that it won't add more confusion. We'll have that in a separate example.
 
 #### *pass_struct.c*
 ```
