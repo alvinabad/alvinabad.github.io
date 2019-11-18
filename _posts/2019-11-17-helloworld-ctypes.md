@@ -132,7 +132,7 @@ lib.free_data.argtypes = [Data]
 ```
 
 In the *pass_struct.c* program above, there is a function called *free_data()* that accepts a struct.
-We will call this function from Python to pass a struct.
+We will call this function from Python to pass the struct data and free the memory allocated.
 
 When we called the *get_data()* function, it allocated a memory to the d.message string.
 When we're done using it, we need to free its memory usage or else it will be memory leak.
