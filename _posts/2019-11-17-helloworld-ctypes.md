@@ -121,7 +121,7 @@ Easy, right? Like a hello world program.
 But you might say, "There is a memory leak!" 
 That's true. We will take care of that when we show how to pass a struct to a C program.
 
-### How to pass a struct data to a C function
+## How to pass a struct data to a C function
 
 To pass a struct to a C function, you'll need to set the *argtypes* of the name of the class Structure,
 which is in our case *Data*.
