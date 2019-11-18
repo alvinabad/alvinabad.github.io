@@ -18,7 +18,7 @@ Ah, suddenly it got complicated.
 
 ## How to retrieve a struct data from a C function
 
-Passing integers and strings to and from a C program is straight forward.
+Passing integers and strings to and from a C program is straightforward.
 But when it comes to struct, there is a bit of setup involved. 
 Below is an example on how to retrieve a struct data from C. 
 I made the example as simple as possible so that it can be better understood. 
