@@ -71,7 +71,7 @@ The command above will create a private key and send it to STDOUT.
 
 At some point, you will need to save your private key to a file so that it can be used later.
 I don't think anyone can memorize an RSA key. As you can see above, 
-it is composed of a lot random characters that don't make any sense.
+it is composed of characters that look meaningless. Although they do contain a lot of information.
 
 So if you need to save it to a file, clearly, it is not desirable to store it in the clear. 
 It would be like saving a password to a file in clear text.
