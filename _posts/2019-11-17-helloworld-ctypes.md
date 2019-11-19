@@ -16,7 +16,7 @@ But when I began using it at my work were I needed to call C libraries from Pyth
 the data being passed and returned from the C functions were structs, arrays, pointers, pointers to pointers, ... 
 Ah, suddenly it got complicated.
 
-## How to retrieve a struct data from a C function
+## How to retrieve a struct from a C function
 
 Passing integers and strings to and from a C program is straightforward.
 But when it comes to struct, there is a bit of setup involved. 
@@ -154,7 +154,7 @@ We can free up this memory by calling the *free_data()* function in our C progra
 
 Here we can show how to pass a struct to a C program.
 
-## How to pass a struct data to a C function
+## How to pass a struct to a C function
 
 For this example, instead of passing a struct, we will pass a pointer to a struct.
 
