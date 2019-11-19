@@ -20,11 +20,14 @@ Ah, suddenly it got complicated.
 
 Passing integers and strings to and from a C program is straightforward.
 But when it comes to struct, there is a bit of setup involved. 
-Below is an example on how to retrieve a struct data from C. 
-I made the example as simple as possible so that it can be better understood. 
-No fancy and extra features are involved. Only things related to the topic are included.
-I thought those extra fancy things only get in the way of understanding quickly. They are not helping at all.
-In the first example, I deliberately omitted the process of how to pass a struct so that it won't add more confusion. We'll have that in a separate example.
+
+The following are examples of how to pass a struct data from C to Python and vice-versa. 
+I made the examples as simple as possible so that they can be better understood. 
+No fancy and extra features are involved. Only things related to the topic are in the code.
+I thought fancy examples only add to the confusion and gets in the way of understanding the topic.
+
+I would assume that you know both C and Python. I will not explain how the program works on each side.
+I will only explain the things how the hooks are set up to link each other.
 
 #### *pass_struct.c*
 ```
@@ -32,9 +35,10 @@ In the first example, I deliberately omitted the process of how to pass a struct
 #include <stdlib.h>
 
 struct data;
-void free_data(struct data *);
 
 struct data *get_data();
+void send_data(struct data *);
+void free_data(struct data *);
 
 struct data {
     int status;
@@ -43,18 +47,23 @@ struct data {
 
 struct data *get_data()
 {
-    struct data *dp;
+    struct data *d;
 
     // allocate memory to out struct data
-    dp = malloc(sizeof(struct data));
-    dp->message  = malloc(50 * sizeof(char));
+    d = malloc(sizeof(struct data));
+    d->message  = malloc(50 * sizeof(char));
 
     // put contents to our struct data
-    snprintf(dp->message, 50, "%s", "hello from C");
-    dp->status = 5;
+    snprintf(d->message, 50, "%s", "hello from C");
+    d->status = 5;
 
     // return pointer to our struct data
-    return dp;
+    return d;
+}
+
+void send_data(struct data *d)
+{
+    printf("Received data in C: %d, %s\n", d->status, d->message);
 }
 
 void free_data(struct data *d)
@@ -71,16 +80,17 @@ Here's a C program that has a function called *get_data()*.
 It creates a struct and puts data into it. It then returns a pointer to the struct Data.
 Whoever will call this function, it will have access to the struct data produced by that funtion.
 
-Ignore the function *free_data()* for now. That will be used in the next example.
+Ignore the other functions for now. They will be used in the next examples.
 
-To make this callable from Python, we need to compile this program into a shared library. We'll call it *mylib.so*.
+To make the function *get_data()* callable from Python, we need to compile this program into a shared library. 
+We'll call it *mylib.so*.
 
 ```
 gcc -Wall -Werror -g -fPIC pass_struct.c -shared -o mylib.so
 ```
 
 
-#### *get_data.py*
+#### *pass_struct.py*
 ```python
 #!/usr/bin/env python
 
@@ -104,27 +114,39 @@ if __name__ == '__main__':
     print d.status, d.message
 ```
 
-Here's our Python program, *get_data.py*. 
+Here's a Python program, named *pass_struct.py*. 
 
 First, we need to define a Python class matching the struct in our C program.
 This is done by inheriting the *ctypes.Structure* class and defining the *_fields_* attributes, where
 the *_fields_* defines the members of the C struct.
 
-When this Python program runs, the first thing it needs to do is call the method *ctypes.cdll.LoadLibrary('./mylib.so')*
-to load our C shared library.
+To access the C program in a share library, we need to call this method:
 
-Before we call the C function, we need to set the input and return attributes of the method object.
+```
+lib = ctypes.cdll.LoadLibrary('./mylib.so')
+```
+
+The lib instance created will give the Python program access to all the functions in the loaded library.
+Calling the functions will be as easy as running it like this:
+
+```
+lib.get_data()
+```
+
+But before we call the C function, we need to set the argtypes and restype attributes of the method object.
+These corresponds to the input arguments and return of the C function, respectively.
+For the *get_data()_* function, we set it like this:
 
 ```
 lib.get_data.argtypes = None
 lib.get_data.restype = ctypes.POINTER(Data)
 ```
 
-The C function does not have arguments so this is set to *None*. 
+The C function does not have arguments so it is set to *None*. 
 The return type of the function is
 a pointer to a struct. We set this as *ctypes.POINTER(Data)*.
 
-Since the C function returns a pointer, the actual contents of our struct is available
+Since the C function returns a pointer, the actual contents of our struct will be available
 in the *contents* attribute of the object.
 
 ```
@@ -141,33 +163,30 @@ print d.status, d.message
 Below is a sample run of the Python program:
 
 ```
-$ python get_data.py
+$ python pass_struct.py
 
 5 hello from C
 ```
 
 Easy, right? Like a hello world program.
 
-If we are going to keep the Python program running but it no longer needs the struct data, 
-that memory will still be around since that memory was allocated in our C program.
-We can free up this memory by calling the *free_data()* function in our C program.
-
-Here we can show how to pass a struct to a C program.
+Next, let's show how to pass a struct.
 
 ## How to pass a struct to a C function
 
-For this example, instead of passing a struct, we will pass a pointer to a struct.
+In our C program, we have function named *send_data()*. 
+This function accepts a pointer to a struct.
 
-Like above, before calling the funtion, we need to define the input and return attributes of the method object.
+Similarly, we need to set the argtypes and restype attributes of the function.
 
 ```
 lib.free_data.argtypes = [ctypes.POINTER(Data)]
 lib.free_data.restype = None
 ```
 
-Here's the update *get_data.py* program adding a call to the *free_data()* function.
+Here's an updated *pass_struct.py* program with a call to the *send_data()* function.
 
-#### get_data.py
+#### pass_struct.py
 ```
 #!/usr/bin/env python
 
@@ -190,10 +209,34 @@ if __name__ == '__main__':
     d = dp.contents
     print d.status, d.message
 
-    # free the memory allocated to struct d
-    lib.free_data.argtypes = [ctypes.POINTER(Data)]
-    lib.free_data.restype = None
-    lib.free_data(dp);
+    # create new Data
+    new_d = Data()
+    new_d.message = "hello, alvin"
+    new_d.status = 100
+
+    # define attributes of send_data method
+    lib.send_data.argtypes = [ctypes.POINTER(Data)]
+    lib.send_data.restype = None
+
+    # create pointer to new_d
+    new_dp = ctypes.pointer(new_d)
+
+    # send new_d
+    lib.send_data(new_dp)
+```
+
+Here we created a new Data, named *new_d*.
+
+Since the function accepts a pointer, we need to convert *new_d* into a pointer.
+This is done by calling the ctypes method, *ctypes.pointer()*. 
+This pointer is then supplied to the *send_data()* function.
+
+```
+# create pointer to new_d
+new_dp = ctypes.pointer(new_d)
+
+# send new_d
+lib.send_data(new_dp)
 ```
 
 Below is a sample run of the Python program:
@@ -202,14 +245,28 @@ Below is a sample run of the Python program:
 $ python get_data.py
 
 5 hello from C
-Freeing members of struct from memory: 5, hello from C
-I'm free!
+Received data in C: 100, hello, alvin
 ```
 
-I hope that was easy to follow. Put a comment below if you have any questions.
+Easy, right? I hope that was easy to follow. Put a comment below if you have any questions.
 
 ---
-### Miscellaneous
+## Miscellaneous
+### Memory Management
+You'll notice that there is function named *free_data()*.
+This function can free up the memory allocated to a struct data.
+
+Since we allocated heap memory in *get_data()*, we can use this to free up that memory,
+and call it from Python:
+
+```
+# free the memory allocated to struct d
+lib.free_data.argtypes = [ctypes.POINTER(Data)]
+lib.free_data.restype = None
+lib.free_data(dp)
+```
+
+### Other attributes of ctypes.Structure
 When creating a class to represent a struct in C, it's nice to add the *`__repr__()`* method. 
 This method will allow you to query the members of the class directly.
 
@@ -222,7 +279,7 @@ class Data(ctypes.Structure):
         return '({0}, {1})'.format(self.status, self.message)
 ```
 
-In our case, if you print the variable d, you'll get this output:
+Using our example, if you print the variable d, you'll get this output:
 ```
 (5, hello from C)
 ```
