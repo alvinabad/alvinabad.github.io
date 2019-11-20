@@ -49,15 +49,15 @@ struct data *get_data()
 {
     struct data *d;
 
-    // allocate memory to out struct data
+    // allocate memory to struct data d
     d = malloc(sizeof(struct data));
     d->message  = malloc(50 * sizeof(char));
 
-    // put contents to our struct data
+    // put contents to struct data d
     snprintf(d->message, 50, "%s", "hello from C");
     d->status = 5;
 
-    // return pointer to our struct data
+    // return pointer to struct data
     return d;
 }
 
@@ -78,7 +78,7 @@ void free_data(struct data *d)
 
 Here's a C program that has a function called `get_data()`. 
 It creates a struct and puts data into it. It then returns a pointer to the struct Data.
-Whoever will call this function, it will have access to the struct data produced by that funtion.
+Whoever will call this function will have access to the struct data produced by that function.
 
 Ignore the other functions for now. They will be used in the next examples.
 
