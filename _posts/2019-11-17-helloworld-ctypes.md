@@ -359,19 +359,6 @@ I hope these were all easy to follow. Put a comment below if you have any questi
 
 ---
 ## Miscellaneous
-### Memory Management
-You'll notice that there is function named `free_data()`.
-This function can free up the memory allocated to a struct data.
-
-Since we allocated heap memory in `get_data()`, we can use this to free up that memory,
-and call it from Python:
-
-```
-# free the memory allocated to struct d
-lib.free_data.argtypes = [ctypes.POINTER(Data)]
-lib.free_data.restype = None
-lib.free_data(dp)
-```
 
 ### Other attributes of ctypes.Structure
 When creating a class to represent a struct in C, it's nice to add the `__repr__()` method. 
@@ -389,6 +376,22 @@ class Data(ctypes.Structure):
 Using our example, if you print the variable d, you'll get this output:
 ```
 (5, hello from C)
+```
+
+### Memory Management
+Another example of passing a struct to a C function is to use the `free_data()` function in our C program above.
+This accepts to pointer to a struct, and when it runs, it will free up the memory allocated.
+
+We can call this from Python:
+
+```
+# retrieve pointer to struct
+dp = lib.get_data()
+
+# free memory allocated to dp
+lib.free_data.argtypes = [ctypes.POINTER(Data)]
+lib.free_data.restype = None
+lib.free_data(dp)
 ```
 
 ---
