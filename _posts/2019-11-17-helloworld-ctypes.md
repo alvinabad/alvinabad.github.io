@@ -325,7 +325,7 @@ if __name__ == '__main__':
 
 How about global variables in C? How do you access them in Python?
 
-### How to access a global variable in C
+## How to access a global variable in C
 
 ```
 #include <stdio.h>
