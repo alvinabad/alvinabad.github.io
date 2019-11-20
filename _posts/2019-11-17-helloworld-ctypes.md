@@ -29,7 +29,7 @@ I thought fancy examples only add to the confusion and gets in the way of unders
 I would assume that you know both C and Python. I will not explain how the program works on each side.
 I will only explain the things how the hooks are set up to link each other.
 
-#### *pass_struct.c*
+### *pass_struct.c*
 ```
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,14 +76,14 @@ void free_data(struct data *d)
 }
 ```
 
-Here's a C program that has a function called *get_data()*. 
+Here's a C program that has a function called `get_data()`. 
 It creates a struct and puts data into it. It then returns a pointer to the struct Data.
 Whoever will call this function, it will have access to the struct data produced by that funtion.
 
 Ignore the other functions for now. They will be used in the next examples.
 
-To make the function *get_data()* callable from Python, we need to compile this program into a shared library. 
-We'll call it *mylib.so*.
+To make the function `get_data()` callable from Python, we need to compile this program into a shared library. 
+We'll call it `mylib.so`.
 
 ```
 gcc -Wall -Werror -g -fPIC pass_struct.c -shared -o mylib.so
@@ -114,11 +114,11 @@ if __name__ == '__main__':
     print d.status, d.message
 ```
 
-Here's a Python program, named *pass_struct.py*. 
+Here's a Python program, named `pass_struct.py`. 
 
 First, we need to define a Python class matching the struct in our C program.
-This is done by inheriting the *ctypes.Structure* class and defining the *_fields_* attributes, where
-the *_fields_* defines the members of the C struct.
+This is done by inheriting the `ctypes.Structure` class and defining the `_fields_` attributes, where
+the `_fields_` defines the members of the C struct.
 
 To access the C program in a share library, we need to call this method:
 
@@ -135,19 +135,19 @@ lib.get_data()
 
 But before we call the C function, we need to set the argtypes and restype attributes of the method object.
 These corresponds to the input arguments and return of the C function, respectively.
-For the *get_data()_* function, we set it like this:
+For the `get_data()` function, we set it like this:
 
 ```
 lib.get_data.argtypes = None
 lib.get_data.restype = ctypes.POINTER(Data)
 ```
 
-The C function does not have arguments so it is set to *None*. 
+The C function does not have arguments so it is set to `None`. 
 The return type of the function is
-a pointer to a struct. We set this as *ctypes.POINTER(Data)*.
+a pointer to a struct. We set this as `ctypes.POINTER(Data)`.
 
 Since the C function returns a pointer, the actual contents of our struct will be available
-in the *contents* attribute of the object.
+in the `contents` attribute of the object.
 
 ```
 dp = lib.get_data()
@@ -174,7 +174,7 @@ Next, let's show how to pass a struct.
 
 ## How to pass a struct to a C function
 
-In our C program, we have function named *send_data()*. 
+In our C program, we have function named `send_data()`. 
 This function accepts a pointer to a struct.
 
 Similarly, we need to set the argtypes and restype attributes of the function.
@@ -184,7 +184,7 @@ lib.free_data.argtypes = [ctypes.POINTER(Data)]
 lib.free_data.restype = None
 ```
 
-Here's an updated *pass_struct.py* program with a call to the *send_data()* function.
+Here's an updated `pass_struct.py` program with a call to the `send_data()` function.
 
 #### pass_struct.py
 ```
@@ -225,11 +225,11 @@ if __name__ == '__main__':
     lib.send_data(new_dp)
 ```
 
-Here we created a new Data, named *new_d*.
+Here we created a new Data, named `new_d`.
 
-Since the function accepts a pointer, we need to convert *new_d* into a pointer.
-This is done by calling the ctypes method, *ctypes.pointer()*. 
-This pointer is then supplied to the *send_data()* function.
+Since the function accepts a pointer, we need to convert `new_d` into a pointer.
+This is done by calling the ctypes method, `ctypes.pointer()`. 
+This pointer is then supplied to the `send_data()` function.
 
 ```
 # create pointer to new_d
@@ -248,15 +248,122 @@ $ python get_data.py
 Received data in C: 100, hello, alvin
 ```
 
-Easy, right? I hope that was easy to follow. Put a comment below if you have any questions.
+What if you want to pass a list of strings?
+
+## How to pass a list of strings to a C function
+
+
+```
+void send_list(char *str[], int size)
+{
+    int i;
+
+    for(i=0; i<size; i++)
+    {
+        printf("%s\n", str[i]);
+    }
+}
+```
+
+Let's say you have this C function that accepts an array of strings.
+To call this from Python, you need to create a custom array of strings type.
+
+```
+ArrayStringType = ctypes.c_char_p * N
+```
+where N is the number of strings to pass.
+
+Next, you create an object of this type and then copy to it the elements of your list.
+
+```
+    # create an array of string type
+    ArrayStringType = ctypes.c_char_p * len(mylist)
+
+    # create an object of ArrayStringType
+    array_string = ArrayStringType()
+
+    # copy mylist to array_string
+    array_string[:] = mylist
+```
+
+Use the custom `ArrayStringType` created for the `argtypes` attribute
+
+```
+# set attributes
+lib.send_list.argtypes = [ArrayStringType, ctypes.c_int]
+lib.send_list.restype = None
+```
+
+Here's the complete Python program:
+
+```
+#!/usr/bin/env python
+
+import ctypes
+
+if __name__ == '__main__':
+    lib = ctypes.cdll.LoadLibrary('./mylib.so')
+
+    mylist = ["ctypes", "is", "awesome"]
+
+    # create an array of string type
+    ArrayStringType = ctypes.c_char_p * len(mylist)
+
+    # create an object of ArrayStringType
+    array_string = ArrayStringType()
+
+    # copy mylist to array_string
+    array_string[:] = mylist
+
+    # set attributes
+    lib.send_list.argtypes = [ArrayStringType, ctypes.c_int]
+    lib.send_list.restype = None
+
+    # call C funtion send_list()
+    lib.send_list(array_string, len(mylist))
+```
+
+How about global variables in C? How do you access them in Python?
+
+### How to access a global variable in C
+
+```
+#include <stdio.h>
+
+int ARR_SIZE = 5;
+
+void helloworld()
+{
+    printf("hello, world\n");
+}
+```
+
+Let's say you have the C program above. This has `ARR_SIZE` as a global variable. 
+To access this in Python, use the `in_dll()` method.
+
+Here's the complete Python program:
+```
+#!/usr/bin/env python
+
+import ctypes
+
+lib = ctypes.cdll.LoadLibrary('./mylib.so')
+
+arr_size = ctypes.c_int.in_dll(lib, "ARR_SIZE").value
+print arr_size
+
+lib.helloworld()
+```
+
+I hope these were all easy to follow. Put a comment below if you have any questions.
 
 ---
 ## Miscellaneous
 ### Memory Management
-You'll notice that there is function named *free_data()*.
+You'll notice that there is function named `free_data()`.
 This function can free up the memory allocated to a struct data.
 
-Since we allocated heap memory in *get_data()*, we can use this to free up that memory,
+Since we allocated heap memory in `get_data()`, we can use this to free up that memory,
 and call it from Python:
 
 ```
@@ -267,7 +374,7 @@ lib.free_data(dp)
 ```
 
 ### Other attributes of ctypes.Structure
-When creating a class to represent a struct in C, it's nice to add the *`__repr__()`* method. 
+When creating a class to represent a struct in C, it's nice to add the `__repr__()` method. 
 This method will allow you to query the members of the class directly.
 
 ```
@@ -284,4 +391,5 @@ Using our example, if you print the variable d, you'll get this output:
 (5, hello from C)
 ```
 
+---
 
