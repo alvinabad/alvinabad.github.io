@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Zombies and SSH Tunneling"
+title: "Zombies and SSH"
 description: 
 tags: ssh
 ---
