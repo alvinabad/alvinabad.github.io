@@ -65,7 +65,7 @@ Run this command from your laptop, HOST1:
 >
 ```
 $ ssh -t -L 127.0.0.1:8080:127.0.0.1:8080 HOST2 \
-  ssh -t -L 127.0.0.1:8080:HOST3:8080 -N HOST3
+  ssh -t -L 127.0.0.1:8080:HOST4:8080 -N HOST3
 ```
 >
 After running this, point your browser to this URL:
@@ -76,9 +76,5 @@ http://127.0.0.1:8080
 This is called SSH tunneling. If your only access is SSH, which is port 22,
 you can still access other ports of your destination, even if 
 you go through many layers of servers.
-
-There is no mention of HOST4 in 
-the ssh command above because the effect of running this command
-is like you are on HOST3, which has access to HOST4.
 
 ---
