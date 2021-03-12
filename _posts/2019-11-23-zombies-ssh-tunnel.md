@@ -64,11 +64,11 @@ and you can still keep the zombies away. All you have to do is use SSH tunneling
 Run this command from your laptop, HOST1:
 >
 ```
-$ ssh -t -L 127.0.0.1:8080:127.0.0.1:8080 HOST2 \
-  ssh -t -L 127.0.0.1:8080:HOST4:8080 -N HOST3
+$ ssh -t -L 127.0.0.1:8080:127.0.0.1:8080 user@HOST2 \
+  ssh -t -L 127.0.0.1:8080:HOST4:8080 -N user@HOST3
 ```
 >
-After running this, point your browser to this URL:
+After running the command above, pointing your browser to the URL below will be equivalent to browsing http://HOST4:8080/
 ```
 http://127.0.0.1:8080
 ```
